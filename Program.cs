@@ -7,9 +7,9 @@ namespace DocRename
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Users\Cleberson\Desktop\teste";
+            string rootPath = @"C:\Users\Cleberson\Desktop\teste";
 
-            string[] files = Directory.GetFiles(path);
+            string[] files = Directory.GetFiles(rootPath); //I changed 'path' to 'rootPath'
 
             foreach(string file in files)
             {
