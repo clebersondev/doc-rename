@@ -13,14 +13,37 @@ namespace DocRename
 
             foreach(string file in files)
             {
-                if(file.Contains(' '))
+                Console.WriteLine($"Qual o caractere do '{Path.GetFileNameWithoutExtension(file)}' que você deseja renomear ou remover?");
+                try
                 {
-                    string renameFile = Path.GetFullPath(file.Replace(" ",""));
-                    File.Move(file, renameFile);
-                }                
+                    string respUser = Console.ReadLine();
+
+                    if (String.IsNullOrEmpty(respUser))
+                    {
+                        Console.WriteLine("A resposta não pode ser vazia.");
+                    }else
+                    {
+                        string charUser = respUser;
+                        
+                        if(file.Contains(charUser))
+                        {
+                            string renameFile = Path.GetFullPath(file.Replace(charUser, ""));
+                            File.Move(file, renameFile);
+                            Console.WriteLine($"O {Path.GetFileName(file)} foi renomeado para {Path.GetFileName(renameFile)}.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Nenhum resultado com esse caractere foi encontrado.");
+                        }
+
+                    }  
+                }catch(Exception)
+                {
+                    Console.WriteLine("Entre com um caractere válido, por favor.");
+                }           
             }
             Console.WriteLine("All done!");
-            Console.Read();
+            //Console.Read();
         }
     }
 }
