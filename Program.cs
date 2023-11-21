@@ -8,10 +8,45 @@ namespace DocRename
         static void Main(string[] args)
         {
             string rootPath = @"C:\Users\Cleberson\Desktop\teste";
+            string destPath = @"C:\Users\Cleberson\Desktop\teste\renameFolder";
 
             string[] files = Directory.GetFiles(rootPath);
 
-            foreach(string file in files)
+            for(int i = 0; i < files.Length; i++)
+            {
+                Console.WriteLine("Qual caractere deseja renomear ou editar?");
+                var resp = Console.ReadLine();
+                if(string.IsNullOrEmpty(resp))
+                {
+                    Console.WriteLine("A sua resposta não ser vazia.");
+                }else
+                {
+                    if(files[i].Contains(resp))
+                    {
+                        if(Directory.Exists(destPath))
+                        {
+                            var file = Path.GetFullPath(files[i].Replace(resp, ""));
+                            File.Move(files[i], file);
+                            Directory.Move(file, destPath);
+                            File.Move(destPath, destPath);
+                            
+                        }else
+                        {
+                            var file = Path.GetFullPath(files[i].Replace(resp, ""));
+                            File.Move(files[i], file);
+                            Directory.CreateDirectory(destPath);
+                            Directory.Move(file, destPath);
+                            File.Move(destPath, destPath);
+                        }
+                        
+                    }else
+                    {
+                        Console.WriteLine("O caractere não foi encontrado no(s) arquivo(s).");
+                    }
+                }
+            }
+
+            /*foreach(string file in files)
             {
                 Console.WriteLine($"Qual o caractere do '{Path.GetFileNameWithoutExtension(file)}' que você deseja renomear ou remover?");
                 try
@@ -41,9 +76,8 @@ namespace DocRename
                 {
                     Console.WriteLine("Entre com um caractere válido, por favor.");
                 }           
-            }
+            }*/
             Console.WriteLine("All done!");
-            //Console.Read();
         }
     }
 }
