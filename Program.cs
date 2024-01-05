@@ -1,83 +1,74 @@
-﻿using System;
-using System.IO;
+﻿using docrename.ContentContext;
 
-namespace DocRename
+Screen();
+
+void Screen()
 {
-    class Program
+    Console.Clear();
+    Console.WriteLine("# FERRAMENTA PARA RENOMEAR ARQUIVOS #");
+    Console.WriteLine("-------------------------------------");
+    Console.WriteLine("1. Extrair o nome dos arquivos.");
+    Console.WriteLine("2. Inserir o nome nos arquivos.");
+    Console.WriteLine("3. SAIR.");
+    Console.WriteLine("-------------------------------------");
+    Console.WriteLine("ESCOLHA UMA DAS OPÇÕES ACIMA...");
+
+    try
     {
-        static void Main(string[] args)
+        var option = Console.ReadLine();
+        if (!String.IsNullOrEmpty(option))
         {
-            string rootPath = @"C:\Users\Cleberson\Desktop\teste";
-            string destPath = @"C:\Users\Cleberson\Desktop\teste\renameFolder";
+            var resp = int.Parse(option);
 
-            string[] files = Directory.GetFiles(rootPath);
-
-            for(int i = 0; i < files.Length; i++)
+            if (resp == 0 || resp >= 4)
             {
-                Console.WriteLine("Qual caractere deseja renomear ou editar?");
-                var resp = Console.ReadLine();
-                if(string.IsNullOrEmpty(resp))
-                {
-                    Console.WriteLine("A sua resposta não ser vazia.");
-                }else
-                {
-                    if(files[i].Contains(resp))
-                    {
-                        if(Directory.Exists(destPath))
-                        {
-                            var file = Path.GetFullPath(files[i].Replace(resp, ""));
-                            File.Move(files[i], file);
-                            Directory.Move(file, destPath);
-                            File.Move(destPath, destPath);
-                            
-                        }else
-                        {
-                            var file = Path.GetFullPath(files[i].Replace(resp, ""));
-                            File.Move(files[i], file);
-                            Directory.CreateDirectory(destPath);
-                            Directory.Move(file, destPath);
-                            File.Move(destPath, destPath);
-                        }
-                        
-                    }else
-                    {
-                        Console.WriteLine("O caractere não foi encontrado no(s) arquivo(s).");
-                    }
-                }
+                Console.Clear();
+                Console.WriteLine("Opção não correspende a nenhuma da lista. Tente de novo, por favor.");
+                Console.WriteLine("Aperte qualquer tecla para voltar...");
+                Console.ReadKey();
+                Screen();
             }
 
-            /*foreach(string file in files)
+            switch (resp)
             {
-                Console.WriteLine($"Qual o caractere do '{Path.GetFileNameWithoutExtension(file)}' que você deseja renomear ou remover?");
-                try
-                {
-                    string respUser = Console.ReadLine();
-
-                    if (String.IsNullOrEmpty(respUser))
+                case 1:
                     {
-                        Console.WriteLine("A resposta não pode ser vazia.");
-                    }else
+                        Console.Clear();
+                        var createName = new CreateName();
+                        createName.GetName();
+                        createName.CreateAndWriteFile();
+                        Console.ReadKey();
+                        Screen();
+                    };
+                    break;
+                case 2:
                     {
-                        string charUser = respUser;
-                        
-                        if(file.Contains(charUser))
-                        {
-                            string renameFile = Path.GetFullPath(file.Replace(charUser, ""));
-                            File.Move(file, renameFile);
-                            Console.WriteLine($"O {Path.GetFileName(file)} foi renomeado para {Path.GetFileName(renameFile)}.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Nenhum resultado com esse caractere foi encontrado.");
-                        }
-
-                    }  
-                }catch(Exception)
-                {
-                    Console.WriteLine("Entre com um caractere válido, por favor.");
-                }           
-            }*/
-            Console.WriteLine("All done!");
+                        Console.Clear();
+                        var insert = new InsertName();
+                        insert.Rename();
+                        Console.ReadKey();
+                        Screen();
+                    }
+                    break;
+                case 3:
+                    Environment.Exit(0);
+                    break;
+            }
         }
+        else
+        {
+            Console.Clear();
+            Console.WriteLine("Sua reposta não pode ser vazia ou incorreta.");
+            Console.ReadKey();
+            Screen();
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.Clear();
+        Console.WriteLine($"Algo deu errado: {ex.Message}");
+        Console.WriteLine("Aperte qualquer tecla para voltar ao Menu...");
+        Console.ReadKey();
+        Screen();
     }
 }
