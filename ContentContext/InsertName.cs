@@ -12,27 +12,36 @@ public class InsertName
         try
         {
             if (!File.Exists(destPath))
-            {
                 File.Create(destPath);
-            }
-            else
+
+            using (StreamReader sr = new(destPath))
             {
-                using StreamReader sr = new(destPath);
                 foreach (var file in files)
                 {
                     var line = sr.ReadLine();
-
-                    File.Move(file, line);
-                    Console.WriteLine("O arquivo {0} foi renomeado.", line);
+                    if (line == null)
+                    {
+                        line = Path.GetFileName(file);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("O arquivo {0} foi ignorado.", line);
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        File.Move(file, line);
+                        Console.WriteLine("O arquivo {0} foi renomeado.", line);
+                    }
                 }
-                Console.WriteLine("Arquivo(s) renomado(s) com sucesso.");
+                Console.WriteLine();
+                Console.WriteLine("Todos os arquivos foram renomeados com sucesso.");
+                Console.WriteLine("Aperte qualquer tecla para voltar ao menu...");
                 Console.ReadKey();
             }
-
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Algo deu errado: {ex.Message}");
+            Console.WriteLine($"Ops! Algo deu errado: {ex.Message}");
+            Console.WriteLine("Aperte qualquer tecla para voltar ao menu...");
             Console.ReadKey();
         }
     }

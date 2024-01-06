@@ -3,47 +3,43 @@ namespace docrename.ContentContext;
 public class CreateName
 {
     const string rootPath = @"C:\Users\Cleberson\Videos\Curso do Balta\Back-end\Carreira 02 - .NET Data Access\02. Acesso à dados com .NET, C#, Dapper e SQL Server";
-    //static String rootPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\02. Acesso à dados com .NET, C#, Dapper e SQL Server";
     const string destPath = $@"{rootPath}\namefile\" + "names.txt";
-    //String destPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @".txt";
 
-    string[] files = Directory.GetFiles(rootPath);
-    public List<string> nameFiles { get; set; } = new();
+    readonly string[] files = Directory.GetFiles(rootPath);
+    public List<string> NameFiles { get; set; } = new();
 
     public List<string> GetName()
     {
         foreach (var file in files)
         {
             var name = Path.GetFileName(file);
-            nameFiles.Add(name);
-        };
-        return nameFiles;
+            NameFiles.Add(name);
+        }
+        return NameFiles;
     }
 
     public void CreateAndWriteFile()
     {
         try
         {
-            //var filePath = Directory.CreateDirectory(destPath);
-            //filePath.Create();
+            if (!File.Exists(destPath))
+                File.Create(destPath);
 
-            //var filecreate = File.Create(destPath);
-
-            using (StreamWriter writer = new StreamWriter(destPath))
-            {
-                foreach (var file in nameFiles)
-                    writer.WriteLine(file);
-            }
+            using StreamWriter writer = new StreamWriter(destPath);
+            foreach (var file in NameFiles)
+                writer.WriteLine(file);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Algo deu errado: {ex.Message}");
+            Console.Clear();
+            Console.WriteLine($"Ops! Algo deu errado: {ex.Message}");
             Console.WriteLine("Aperte qualquer tecla para sair do programa...");
             Console.ReadKey();
-            Console.Clear();
+            Environment.Exit(0);
         }
 
         Console.WriteLine("Os títulos foram salvos com sucesso!");
         Console.WriteLine("Aperte qualquer tecla para voltar ao menu...");
+        Console.ReadKey();
     }
 }

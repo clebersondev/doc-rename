@@ -37,7 +37,6 @@ void Screen()
                         var createName = new CreateName();
                         createName.GetName();
                         createName.CreateAndWriteFile();
-                        Console.ReadKey();
                         Screen();
                     };
                     break;
@@ -46,7 +45,6 @@ void Screen()
                         Console.Clear();
                         var insert = new InsertName();
                         insert.Rename();
-                        Console.ReadKey();
                         Screen();
                     }
                     break;
