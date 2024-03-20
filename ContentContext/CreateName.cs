@@ -1,49 +1,70 @@
 namespace docrename.ContentContext;
-
 public class CreateName
 {
-    const string rootPath = @"C:\Users\Cleberson\Videos\Curso do Balta\Back-end\Carreira 02 - .NET Data Access\02. Acesso à dados com .NET, C#, Dapper e SQL Server";
-    //static String rootPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\02. Acesso à dados com .NET, C#, Dapper e SQL Server";
-    const string destPath = $@"{rootPath}\namefile\" + "names.txt";
-    //String destPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @".txt";
-
-    string[] files = Directory.GetFiles(rootPath);
-    public List<string> nameFiles { get; set; } = new();
-
-    public List<string> GetName()
+    public CreateName(string pathFile, string destPath, string destFilePath)
     {
+        FilePath = pathFile;
+        DestPath = destPath;
+        DestFilePath = destFilePath;
+        files = Directory.GetFiles(FilePath);
+    }
+    public string FilePath { get; set; }
+    public string DestPath { get; set; }
+    public string DestFilePath { get; set; }
+    public List<string> NameFiles = new();
+
+    public string[] files;
+
+    public List<string> GetFileNames()
+    {
+        int i = 0;
         foreach (var file in files)
         {
-            var name = Path.GetFileName(file);
-            nameFiles.Add(name);
-        };
-        return nameFiles;
+            var extension = Path.GetExtension(file);
+
+            do
+            {
+                var fileName = Path.GetFileNameWithoutExtension(file);
+                i++;
+                if (extension == ".mkv" || extension == ".mp4")
+                {
+                    NameFiles.Add(fileName);
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"O {fileName} foi adicionado ao arquivo.");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"O arquivo {fileName} foi ignorado");
+                    Console.ResetColor();
+                }
+            }
+            while (i > files.Length);
+        }
+        return NameFiles;
     }
 
     public void CreateAndWriteFile()
     {
         try
         {
-            //var filePath = Directory.CreateDirectory(destPath);
-            //filePath.Create();
-
-            //var filecreate = File.Create(destPath);
-
-            using (StreamWriter writer = new StreamWriter(destPath))
-            {
-                foreach (var file in nameFiles)
-                    writer.WriteLine(file);
-            }
+            using StreamWriter writer = new StreamWriter(DestFilePath);
+            foreach (var file in NameFiles)
+                writer.WriteLine(file);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Algo deu errado: {ex.Message}");
+            Console.Clear();
+            Console.WriteLine($"Ops! Algo deu errado: {ex.Message} Tipo: '{ex.GetType}'");
             Console.WriteLine("Aperte qualquer tecla para sair do programa...");
             Console.ReadKey();
-            Console.Clear();
+            Environment.Exit(0);
         }
 
         Console.WriteLine("Os títulos foram salvos com sucesso!");
         Console.WriteLine("Aperte qualquer tecla para voltar ao menu...");
+        Console.ReadKey();
     }
 }
