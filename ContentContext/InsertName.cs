@@ -2,23 +2,33 @@ namespace docrename.ContentContext;
 
 public class InsertName
 {
-    const string rootPath = @"C:\Users\Cleberson\Videos\Curso do Balta\Back-end\Carreira 02 - .NET Data Access\02. Acesso à dados com .NET, C#, Dapper e SQL Server";
-    const string destPath = $@"{rootPath}\namefile\" + "names.txt";
+    public InsertName(string pathFile, string destPath, string destFilePath)
+    {
+        FilePath = pathFile;
+        DestPath = destPath;
+        DestFilePath = destFilePath;
+        files = Directory.GetFiles(FilePath);
+    }
+    public string FilePath { get; set; }
+    public string DestPath { get; set; }
+    public string DestFilePath { get; set; }
+    public string[] files;
 
-    readonly string[] files = Directory.GetFiles(rootPath);
-
-    public void Rename()
+    public void RenameFiles()
     {
         try
         {
-            if (!File.Exists(destPath))
-                File.Create(destPath);
+            if (!Directory.Exists(DestPath))
+                Directory.CreateDirectory(DestPath);
 
-            using (StreamReader sr = new(destPath))
+            using StreamReader sr = new(DestFilePath);
+            int i = 0;
+            foreach (var file in files)
             {
-                foreach (var file in files)
+                var extension = Path.GetExtension(file);
+                var line = sr.ReadLine();
+                do
                 {
-                    var line = sr.ReadLine();
                     if (line == null)
                     {
                         line = Path.GetFileName(file);
@@ -28,15 +38,18 @@ public class InsertName
                     }
                     else
                     {
-                        File.Move(file, line);
-                        Console.WriteLine("O arquivo {0} foi renomeado.", line);
+                        i++;
+                        File.Move(file, $"{i.ToString("D3")}. {line}{extension}");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("O arquivo {0}.{1} foi renomeado.", line, extension);
+                        Console.ResetColor();
                     }
-                }
-                Console.WriteLine();
-                Console.WriteLine("Todos os arquivos foram renomeados com sucesso.");
-                Console.WriteLine("Aperte qualquer tecla para voltar ao menu...");
-                Console.ReadKey();
+                } while (i > files.Length);
             }
+            Console.WriteLine();
+            Console.WriteLine("Todos os arquivos foram renomeados com sucesso.");
+            Console.WriteLine("Aperte qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
         }
         catch (Exception ex)
         {

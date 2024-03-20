@@ -2,9 +2,8 @@
 
 Screen();
 
-void Screen()
+static void Screen()
 {
-    Console.Clear();
     Console.WriteLine("# FERRAMENTA PARA RENOMEAR ARQUIVOS #");
     Console.WriteLine("-------------------------------------");
     Console.WriteLine("1. Extrair o nome dos arquivos.");
@@ -33,18 +32,25 @@ void Screen()
             {
                 case 1:
                     {
-                        Console.Clear();
-                        var createName = new CreateName();
-                        createName.GetName();
+                        var path = new PathFile();
+                        var pathFile = path.GetPathFiles();
+                        var destPath = @$"{pathFile}\namefile";
+                        var destFilePath = @$"{destPath}\namefiles.txt";
+
+                        var createName = new CreateName(pathFile, destPath, destFilePath);
+                        createName.GetFileNames();
                         createName.CreateAndWriteFile();
                         Screen();
                     };
                     break;
                 case 2:
                     {
-                        Console.Clear();
-                        var insert = new InsertName();
-                        insert.Rename();
+                        var path = new PathFile();
+                        var pathFile = path.GetPathFiles();
+                        var destPath = @$"{pathFile}\namefile";
+                        var destFilePath = @$"{destPath}\namefiles.txt";
+                        var insert = new InsertName(pathFile, destPath, destFilePath);
+                        insert.RenameFiles();
                         Screen();
                     }
                     break;
@@ -63,7 +69,6 @@ void Screen()
     }
     catch (Exception ex)
     {
-        Console.Clear();
         Console.WriteLine($"Algo deu errado: {ex.Message}");
         Console.WriteLine("Aperte qualquer tecla para voltar ao Menu...");
         Console.ReadKey();
